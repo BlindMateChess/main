@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BlindMate: A revolutionary tactile chess board and AI-powered app designed for blind and visually impaired players to enjoy chess independently.">
+  <meta name="keywords" content="BlindMate, accessible chess, tactile chess board, AI chess app, blind chess, visually impaired chess, inclusive gaming">
+  <meta name="author" content="BlindMate Team">
+  <title>BlindMate - Accessible Chess for Everyone</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Chess Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Placeholder Favicon -->
+  <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32.png?text=♟️">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F5F5F5;
+    }
+    /* Chessboard-inspired background pattern */
+    .chessboard-bg {
+      background-image: linear-gradient(45deg, #0000 25%, #0000 25%, #0000 50%, #0000 50%, #0000 75%, #0000 75%, #0000);
+      background-size: 40px 40px;
+    }
+    /* Animation for fading in elements */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Hero section animation */
+    .hero-slide {
+      animation: slideIn 1.5s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    /* Chess piece animation */
+    .chess-piece {
+      transition: transform 0.3s ease;
+    }
+    .chess-piece:hover {
+      transform: scale(1.2);
+    }
+    /* Cookie Pop-up Styling */
+    #cookie-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #4B2E2A;
+      color: #D9C2A6;
+      padding: 1.5rem;
+      border-radius: 8px;
+      max-width: 400px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      display: none;
+      z-index: 1000;
+    }
+    /* Smooth scroll behavior */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <!-- Cookie Pop-up -->
+  <div id="cookie-popup" class="fade-in">
+    <h3 class="text-lg font-semibold mb-2">We use cookies</h3>
+    <p class="text-sm mb-4">This website uses cookies to ensure you get the best experience. By continuing, you agree to our <a href="#privacy" class="text-blue-400 underline">Privacy Policy</a>.</p>
+    <div class="flex space-x-4">
+      <button id="accept-cookies" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Accept</button>
+      <button id="reject-cookies" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Reject</button>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex-shrink-0 flex items-center">
+          <i class="fas fa-chess-knight text-2xl text-[#4B2E2A] mr-2"></i>
+          <h1 class="text-2xl font-bold text-[#4B2E2A]">BlindMate</h1>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#home" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Home</a>
+          <a href="#blind-chess" class="text-[#4 Genetics 4B2E2A] hover:text-[#D9C2A6]">Blind Chess</a>
+          <a href="#features" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Features</a>
+          <a href="#testimonials" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Testimonials</a>
+          <a href="#about" class="text-[#4B2E2A] hover:text-[#D9C2A6]">About</a>
+          <a href="#contact" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Contact</a>
+        </div>
+        <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
+          <svg class="w-6 h-6 text-[#4B2E2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+        <div class="flex flex-col space-y-4 px-4 py-2">
+          <a href="#home" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Home</a>
+          <a href="#blind-chess" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Blind Chess</a>
+          <a href="#features" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Features</a>
+          <a href="#testimonials" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Testimonials</a>
+          <a href="#about" class="text-[#4B2E2A] hover:text-[#D9C2A6]">About</a>
+          <a href="#contact" class="text-[#4B2E2A] hover:text-[#D9C2A6]">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="chessboard-bg text-black py-20 hero-slide">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-4xl md:text-5xl font-bold font-merriweather mb-4 fade-in">BlindMate: Checkmate Without Limits</h2>
+      <p class="text-lg md:text-xl mb-6 fade-in" style="animation-delay: 0.2s;">A revolutionary tactile chess board and AI-powered app for blind and visually impaired players.</p>
+      <div class="flex justify-center space-x-4 fade-in" style="animation-delay: 0.4s;">
+        <a href="#contact" class="bg-[#D9C2A6] text-[#4B2E2A] px-6 py-3 rounded-full font-semibold hover:bg-[#4B2E2A] hover:text-[#D9C2A6] flex items-center">
+          <i class="fas fa-chess-pawn mr-2"></i>Join the Waitlist
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Power of Blind Chess Section -->
+  <section id="blind-chess" class="py-16 bg-[#D9C2A6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold font-merriweather text-center text-[#4B2E2A] mb-12 fade-in">The Power of Blind Chess</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="fade-in" style="animation-delay: 0.2s;">
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4 flex items-center"><i class="fas fa-chess-king mr-2"></i>Inclusion in Every Move</h3>
+          <p class="text-[#4B2E2A]">Chess is a universal game that sharpens the mind and fosters community. For the 43 million blind and 250 million visually impaired people worldwide, BlindMate opens the board to independent play, breaking barriers with tactile and audio innovation.</p>
+        </div>
+        <div class="fade-in" style="animation-delay: 0.4s;">
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4 flex items-center"><i class="fas fa-chess-queen mr-2"></i>Empowering Independence</h3>
+          <p class="text-[#4B2E2A]">Traditional blind chess sets rely on manual pieces and sighted assistance. BlindMate’s smart tactile board and AI app provide real-time feedback, allowing players to strategize and learn independently, transforming the game for accessibility.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold font-merriweather text-center text-[#4B2E2A] mb-12 fade-in">Why BlindMate Stands Out</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center p-6 bg-[#D9C2A6] rounded-lg shadow-md fade-in chess-piece" style="animation-delay: 0.2s;">
+          <i class="fas fa-chess-rook text-4xl text-[#4B2E2A] mb-4"></i>
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4">Tactile Projection Board</h3>
+          <p>Feel every piece with our innovative board that uses tactile pins to represent moves, eliminating the need for visual input.</p>
+        </div>
+        <div class="text-center p-6 bg-[#D9C2A6] rounded-lg shadow-md fade-in chess-piece" style="animation-delay: 0.4s;">
+          <i class="fas fa-chess-bishop text-4xl text-[#4B2E2A] mb-4"></i>
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4">AI-Powered Coaching</h3>
+          <p>Our mobile app offers real-time audio instructions, personalized move suggestions, and adaptive puzzles to enhance your skills.</p>
+        </div>
+        <div class="text-center p-6 bg-[#D9C2A6] rounded-lg shadow-md fade-in chess-piece" style="animation-delay: 0.6s;">
+          <i class="fas fa-chess-knight text-4xl text-[#4B2E2A] mb-4"></i>
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4">Fully Accessible Design</h3>
+          <p>Built for blind and visually impaired players, ensuring seamless gameplay without reliance on sighted assistance.</p>
+        </div>
+        <div class="text-center p-6 bg-[#D9C2A6] rounded-lg shadow-md fade-in chess-piece" style="animation-delay: 0.8s;">
+          <i class="fas fa-chess-pawn text-4xl text-[#4B2E2A] mb-4"></i>
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4">Interactive Training</h3>
+          <p>Engage in customized chess puzzles and games tailored to your skill level, with audio feedback for an immersive experience.</p>
+        </div>
+        <div class="text-center p-6 bg-[#D9C2A6] rounded-lg shadow-md fade-in chess-piece" style="animation-delay: 1s;">
+          <i class="fas fa-chess text-4xl text-[#4B2E2A] mb-4"></i>
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4">Community Integration</h3>
+          <p>Connect with chess clubs and schools for the blind, fostering social inclusion through shared gaming experiences.</p>
+        </div>
+        <div class="text-center p-6 bg-[#D9C2A6] rounded-lg shadow-md fade-in chess-piece" style="animation-delay: 1.2s;">
+          <i class="fas fa-chess-board text-4xl text-[#4B2E2A] mb-4"></i>
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4">Portable and Durable</h3>
+          <p>Designed for portability, our board is lightweight, durable, and perfect for home or club use.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="py-16 bg-[#4B2E2A] text-[#D9C2A6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold font-merriweather text-center mb-12 fade-in">What Our Community Says</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="p-6 bg-[#D9C2A6] text-[#4B2E2A] rounded-lg shadow-md fade-in" style="animation-delay: 0.2s;">
+          <p class="italic mb-4">"BlindMate has transformed how I enjoy chess. The tactile board and audio guidance make every game feel empowering and fun!"</p>
+          <p class="font-semibold">– Anna, Blind Chess Enthusiast</p>
+        </div>
+        <div class="p-6 bg-[#D9C2A6] text-[#4B2E2A] rounded-lg shadow-md fade-in" style="animation-delay: 0.4s;">
+          <p class="italic mb-4">"As a chess coach for the visually impaired, I’ve seen how BlindMate’s AI coaching helps my students improve independently."</p>
+          <p class="font-semibold">– Michael, Chess Instructor</p>
+        </div>
+        <div class="p-6 bg-[#D9C2A6] text-[#4B2E2A] rounded-lg shadow-md fade-in" style="animation-delay: 0.6s;">
+          <p class="italic mb-4">"The tactile board is a game-changer. I can now play with friends at the chess club without needing assistance."</p>
+          <p class="font-semibold">– Sarah, Visually Impaired Player</p>
+        </div>
+        <div class="p-6 bg-[#D9C2A6] text-[#4B2E2A] rounded-lg shadow-md fade-in" style="animation-delay: 0.8s;">
+          <p class="italic mb-4">"BlindMate brings chess to life for our students, fostering both strategy and confidence in an inclusive way."</p>
+          <p class="font-semibold">– Dr. Elena, School for the Blind Director</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 bg-[#D9C2A6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold font-merriweather text-center text-[#4B2E2A] mb-12 fade-in">Our Mission</h2>
+      <p class="text-lg text-center text-[#4B2E2A] mb-6 fade-in" style="animation-delay: 0.2s;">
+        BlindMate empowers blind and visually impaired individuals to enjoy chess independently through innovative tactile technology and AI-driven coaching. Our goal is to make chess accessible to everyone, fostering inclusion and intellectual growth.
+      </p>
+      <div class="text-center">
+        <a href="#contact" class="bg-[#4B2E2A] text-[#D9C2A6] px-6 py-3 rounded-full font-semibold hover:bg-[#D9C2A6] hover:text-[#4B2E2A] flex items-center justify-center mx-auto fade-in" style="animation-delay: 0.4s;">
+          <i class="fas fa-chess-queen mr-2"></i>Learn More
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold font-merriweather text-center text-[#4B2E2A] mb-12 fade-in">Get in Touch</h2>
+      <form class="max-w-lg mx-auto" onsubmit="handleSubmit(event)">
+        <div class="mb-4 fade-in" style="animation-delay: 0.2s;">
+          <label for="name" class="block text-sm font-medium text-[#4B2E2A]">Name</label>
+          <input type="text" id="name" class="mt-1 p-2 w-full border rounded-md border-[#4B2E2A]" required>
+        </div>
+        <div class="mb-4 fade-in" style="animation-delay: 0.4s;">
+          <label for="email" class="block text-sm font-medium text-[#4B2E2A]">Email</label>
+          <input type="email" id="email" class="mt-1 p-2 w-full border rounded-md border-[#4B2E2A]" required>
+        </div>
+        <div class="mb-4 fade-in" style="animation-delay: 0.6s;">
+          <label for="message" class="block text-sm font-medium text-[#4B2E2A]">Message</label>
+          <textarea id="message" class="mt-1 p-2 w-full border rounded-md border-[#4B2E2A]" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="bg-[#4B2E2A] text-[#D9C2A6] px-6 py-3 rounded-full font-semibold hover:bg-[#D9C2A6] hover:text-[#4B2E2A] flex items-center justify-center fade-in" style="animation-delay: 0.8s;">
+          <i class="fas fa-chess-pawn mr-2"></i>Send Message
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Imprint and Privacy Policy -->
+  <section id="imprint" class="py-16 bg-[#D9C2A6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold font-merriweather text-center text-[#4B2E2A] mb-12 fade-in">Imprint & Privacy Policy</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="fade-in" style="animation-delay: 0.2s;">
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4 flex items-center"><i class="fas fa-chess-board mr-2"></i>Imprint</h3>
+          <p class="text-[#4B2E2A]">BlindMate Team<br>
+             TH OWL, Campusallee 12, 32657 Lemgo, Germany<br>
+             Email: contact@blindmate.com<br>
+             VAT ID: (Pending Registration)</p>
+        </div>
+        <div id="privacy" class="fade-in" style="animation-delay: 0.4s;">
+          <h3 class="text-xl font-semibold text-[#4B2E2A] mb-4 flex items-center"><i class="fas fa-chess mr-2"></i>Privacy Policy</h3>
+          <p class="text-[#4B2E2A]">We are committed to protecting your privacy. We collect minimal personal data (e.g., name, email) only for contact purposes. Data is stored securely and not shared with third parties without consent. For details, contact us at contact@blindmate.com.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[#4B2E2A] text-[#D9C2A6] py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p>© 2025 BlindMate. All rights reserved.</p>
+      <div class="mt-4 space-x-4">
+        <a href="#imprint" class="hover:text-[#D9C2A6] underline">Imprint</a>
+        <a href="#privacy" class="hover:text-[#D9C2A6] underline">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Toggle mobile menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Cookie Pop-up Logic
+    window.onload = function() {
+      if (!localStorage.getItem('cookieConsent')) {
+        document.getElementById('cookie-popup').style.display = 'block';
+      }
+    };
+
+    document.getElementById('accept-cookies').addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'accepted');
+      document.getElementById('cookie-popup').style.display = 'none';
+    });
+
+    document.getElementById('reject-cookies').addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'rejected');
+      document.getElementById('cookie-popup').style.display = 'none';
+    });
+
+    // Form Submission Handler (Placeholder)
+    function handleSubmit(event) {
+      event.preventDefault();
+      alert('Thank you for your message! We will get back to you soon.');
+      document.querySelector('form').reset();
+    }
+
+    // Scroll Animation Trigger
+    const elements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    elements.forEach(element => observer.observe(element));
+  </script>
+</body>
+</html>
